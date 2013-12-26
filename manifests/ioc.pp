@@ -34,7 +34,7 @@ define epicssoftioc::ioc(
 
   file { "/etc/iocs/$name/config":
     ensure	=> present,
-    content	=> template('/vagrant/modules/epicssoftioc/templates/etc/iocs/ioc_config'),
+    content	=> template('epicssoftioc/etc/iocs/ioc_config'),
     notify	=> Service["softioc-$name"],
   }
 

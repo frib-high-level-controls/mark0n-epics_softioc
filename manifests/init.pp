@@ -16,7 +16,7 @@ class epicssoftioc($iocbase = '/usr/local/lib/iocapps') {
   }
 
   file { '/etc/default/epics-softioc':
-    content	=> template('/vagrant/modules/epicssoftioc/templates/etc/default/epics-softioc'),
+    content	=> template('epicssoftioc/templates/etc/default/epics-softioc'),
     owner	=> root,
     group	=> root,
     mode	=> '0644',
