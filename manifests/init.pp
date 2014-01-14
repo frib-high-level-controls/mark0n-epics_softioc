@@ -20,6 +20,7 @@ class epicssoftioc($iocbase = '/usr/local/lib/iocapps') {
     owner	=> root,
     group	=> root,
     mode	=> '0644',
+    require	=> Package['sysv-rc-softioc'],
   }
 
   file { '/etc/iocs':
