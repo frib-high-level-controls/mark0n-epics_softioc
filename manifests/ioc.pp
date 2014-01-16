@@ -1,4 +1,4 @@
-define epicssoftioc::ioc(
+define epics_softioc::ioc(
   $ensure = undef,
   $enable = undef,
   $bootdir = 'iocBoot/ioc${HOST_ARCH}',
@@ -12,7 +12,7 @@ define epicssoftioc::ioc(
   if $enable {
     validate_bool($enable)
   }
-  $iocbase = $epicssoftioc::iocbase
+  $iocbase = $epics_softioc::iocbase
 
   if($bootdir) {
     $absbootdir = "$iocbase/$name/$bootdir"
@@ -29,19 +29,19 @@ define epicssoftioc::ioc(
   file { "/etc/iocs/$name":
     ensure	=> directory,
     group	=> 'softioc',
-    require	=> Class['::epicssoftioc'],
+    require	=> Class['::epics_softioc'],
   }
 
   file { "/etc/iocs/$name/config":
     ensure	=> present,
-    content	=> template('epicssoftioc/etc/iocs/ioc_config'),
+    content	=> template('epics_softioc/etc/iocs/ioc_config'),
     notify	=> Service["softioc-$name"],
   }
 
   exec { "create init script for softioc $name":
     command	=> "/usr/bin/manage-iocs install $name",
     require	=> [
-      Class['epicssoftioc'],
+      Class['epics_softioc'],
       File["/etc/iocs/$name/config"],
       File["$iocbase"],
     ],

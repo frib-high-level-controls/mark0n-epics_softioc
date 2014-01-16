@@ -1,4 +1,4 @@
-class epicssoftioc($iocbase = '/usr/local/lib/iocapps') {
+class epics_softioc($iocbase = '/usr/local/lib/iocapps') {
   package { 'epics-dev':
     ensure	=> installed,
   }
@@ -16,7 +16,7 @@ class epicssoftioc($iocbase = '/usr/local/lib/iocapps') {
   }
 
   file { '/etc/default/epics-softioc':
-    content	=> template('epicssoftioc/etc/default/epics-softioc'),
+    content	=> template('epics_softioc/etc/default/epics-softioc'),
     owner	=> root,
     group	=> root,
     mode	=> '0644',
