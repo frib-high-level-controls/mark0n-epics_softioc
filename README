@@ -1,0 +1,21 @@
+  This Puppet module installs and configures an EPICS soft IOC. The IOC is run
+  in procserv to ease maintenance. The IOC can be started/stopped using an init
+  script.
+
+Example:
+
+  $iocbase = '/usr/local/lib/iocapps'
+
+  class { 'epics_softioc':
+    iocbase => $iocbase,
+  }
+
+  epics_softioc::ioc { 'mysoftioc':
+    bootdir     => '',
+    consolePort => '4051',
+    enable      => false,
+    require     => File["${iocbase}/mysoftioc"],
+  }
+
+Contact:
+  Author: Martin Konrad <konrad at frib.msu.edu>
