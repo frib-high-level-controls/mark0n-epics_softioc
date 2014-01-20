@@ -1,3 +1,7 @@
+# This type configures an EPICS soft IOC. It creates configuration files,
+# automatically populates them with the correct values and installs the
+# registers the service.
+#
 define epics_softioc::ioc(
   $ensure = undef,
   $enable = undef,
@@ -7,7 +11,7 @@ define epics_softioc::ioc(
 )
 {
   if $ensure and !($ensure in ['running', 'stopped']) {
-    fail("ensure parameter must be 'running', 'stopped' or undefined")
+    fail('ensure parameter must be "running", "stopped" or <undefined>')
   }
   if $enable {
     validate_bool($enable)
@@ -15,57 +19,57 @@ define epics_softioc::ioc(
   $iocbase = $epics_softioc::iocbase
 
   if($bootdir) {
-    $absbootdir = "$iocbase/$name/$bootdir"
+    $absbootdir = "${iocbase}/${name}/${bootdir}"
   } else {
-    $absbootdir = "$iocbase/$name"
+    $absbootdir = "${iocbase}/${name}"
   }
 
-  user { "$name":
-    comment	=> "$name testioc",
-    home	=> "/epics/iocs/$name",
-    groups	=> 'softioc',
+  user { $name:
+    comment => "${name} testioc",
+    home    => "/epics/iocs/${name}",
+    groups  => 'softioc',
   }
 
-  file { "/etc/iocs/$name":
-    ensure	=> directory,
-    group	=> 'softioc',
-    require	=> Class['::epics_softioc'],
+  file { "/etc/iocs/${name}":
+    ensure  => directory,
+    group   => 'softioc',
+    require => Class['::epics_softioc'],
   }
 
-  file { "/etc/iocs/$name/config":
-    ensure	=> present,
-    content	=> template('epics_softioc/etc/iocs/ioc_config'),
-    notify	=> Service["softioc-$name"],
+  file { "/etc/iocs/${name}/config":
+    ensure  => present,
+    content => template('epics_softioc/etc/iocs/ioc_config'),
+    notify  => Service["softioc-${name}"],
   }
 
-  exec { "create init script for softioc $name":
-    command	=> "/usr/bin/manage-iocs install $name",
-    require	=> [
+  exec { "create init script for softioc ${name}":
+    command => "/usr/bin/manage-iocs install ${name}",
+    require => [
       Class['epics_softioc'],
-      File["/etc/iocs/$name/config"],
-      File["$iocbase"],
+      File["/etc/iocs/${name}/config"],
+      File[$iocbase],
     ],
-    creates	=> "/etc/init.d/softioc-$name",
+    creates => "/etc/init.d/softioc-${name}",
   }
 
   if($ensure == undef) {
-    service { "softioc-$name":
-      ensure		=> undef,
-      enable		=> $enable,
-      hasrestart	=> true,
-      hasstatus		=> true,
-      require		=> [
-        Exec["create init script for softioc $name"],
+    service { "softioc-${name}":
+      ensure     => undef,
+      enable     => $enable,
+      hasrestart => true,
+      hasstatus  => true,
+      require    => [
+        Exec["create init script for softioc ${name}"],
       ],
     }
   } else {
-    service { "softioc-$name":
-      ensure		=> $ensure,
-      enable		=> $enable,
-      hasrestart	=> true,
-      hasstatus		=> true,
-      require		=> [
-        Exec["create init script for softioc $name"],
+    service { "softioc-${name}":
+      ensure     => $ensure,
+      enable     => $enable,
+      hasrestart => true,
+      hasstatus  => true,
+      require    => [
+        Exec["create init script for softioc ${name}"],
       ],
     }
   }

@@ -1,1 +1,1 @@
-SOFTBASE=<%= iocbase %>
+SOFTBASE=<%= @iocbase %>

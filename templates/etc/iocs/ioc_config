@@ -1,4 +1,4 @@
-NAME=<%= name %>
-PORT=<%= consolePort %>
-HOST=<%= fqdn %>
-CHDIR=<%= iocbase %>/<%= name %>
+NAME=<%= @name %>
+PORT=<%= @consolePort %>
+HOST=<%= @fqdn %>
+CHDIR=<%= @absbootdir %>
