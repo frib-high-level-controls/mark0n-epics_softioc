@@ -11,9 +11,10 @@ Example:
   }
 
   epics_softioc::ioc { 'mysoftioc':
-    bootdir     => '',
+    ensure      => running,
+    enable      => true,
+    bootdir     => 'iocBoot/ioclinux-x86_64',
     consolePort => '4051',
-    enable      => false,
     require     => File["${iocbase}/mysoftioc"],
   }
 
