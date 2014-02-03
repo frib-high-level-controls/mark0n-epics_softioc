@@ -52,25 +52,14 @@ define epics_softioc::ioc(
     creates => "/etc/init.d/softioc-${name}",
   }
 
-  if($ensure == undef) {
-    service { "softioc-${name}":
-      ensure     => undef,
-      enable     => $enable,
-      hasrestart => true,
-      hasstatus  => true,
-      require    => [
-        Exec["create init script for softioc ${name}"],
-      ],
-    }
-  } else {
-    service { "softioc-${name}":
-      ensure     => $ensure,
-      enable     => $enable,
-      hasrestart => true,
-      hasstatus  => true,
-      require    => [
-        Exec["create init script for softioc ${name}"],
-      ],
-    }
+  service { "softioc-$name":
+    ensure     => $ensure ? {
+      undef   => undef,
+      default => $ensure,
+    },
+    enable     => $enable,
+    hasrestart => true,
+    hasstatus  => true,
+    require    => Exec["create init script for softioc $name"],
   }
 }
