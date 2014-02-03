@@ -60,6 +60,9 @@ define epics_softioc::ioc(
     enable     => $enable,
     hasrestart => true,
     hasstatus  => true,
-    require    => Exec["create init script for softioc $name"],
+    require    => [
+      Exec["create init script for softioc $name"],
+      User[$name],
+    ],
   }
 }
