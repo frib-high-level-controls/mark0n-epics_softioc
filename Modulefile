@@ -1,0 +1,8 @@
+name    'frib-epics_softioc'
+version '0.1.0'
+source 'https://stash.nscl.msu.edu/scm/deploy/puppet_module_epics_softioc.git'
+author 'konrad'
+license 'MIT License (Expat)'
+summary 'Puppet module for EPICS soft-IOCs'
+description 'Module for installation and configuration of EPICS soft-IOCs.'
+project_page 'https://stash.nscl.msu.edu/projects/DEPLOY/repos/puppet_module_epics_softioc'
