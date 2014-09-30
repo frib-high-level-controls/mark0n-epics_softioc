@@ -5,7 +5,7 @@
 define epics_softioc::ioc(
   $ensure = undef,
   $enable = undef,
-  $bootdir = 'iocBoot/ioc${HOST_ARCH}',
+  $bootdir = "iocBoot/ioc\${HOST_ARCH}",
   $startscript = 'st.cmd',
   $consolePort = 4051
 )
