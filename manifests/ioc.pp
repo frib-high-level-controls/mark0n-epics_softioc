@@ -53,10 +53,7 @@ define epics_softioc::ioc(
   }
 
   service { "softioc-$name":
-    ensure     => $ensure ? {
-      undef   => undef,
-      default => $ensure,
-    },
+    ensure     => $ensure,
     enable     => $enable,
     hasrestart => true,
     hasstatus  => true,
