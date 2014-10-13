@@ -3,11 +3,12 @@
 # registers the service.
 #
 define epics_softioc::ioc(
-  $ensure = undef,
-  $enable = undef,
-  $bootdir = "iocBoot/ioc\${HOST_ARCH}",
+  $ensure      = undef,
+  $enable      = undef,
+  $bootdir     = "iocBoot/ioc\${HOST_ARCH}",
   $startscript = 'st.cmd',
-  $consolePort = 4051
+  $consolePort = 4051,
+  $cfg_append  = [],
 )
 {
   if $ensure and !($ensure in ['running', 'stopped']) {

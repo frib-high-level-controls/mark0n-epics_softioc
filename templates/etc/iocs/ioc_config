@@ -2,3 +2,8 @@ NAME=<%= @name %>
 PORT=<%= @consolePort %>
 HOST=<%= @fqdn %>
 CHDIR=<%= @absbootdir %>
+<% if @cfg_append -%>
+  <%- @cfg_append.each do |string| -%>
+    <%= string %>
+  <%- end -%>
+<%- end -%>
