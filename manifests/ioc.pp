@@ -53,6 +53,13 @@ define epics_softioc::ioc(
     creates => "/etc/init.d/softioc-${name}",
   }
 
+  file { "/var/lib/softioc-${name}":
+    ensure => directory,
+    owner  => 'root',
+    group  => 'softioc',
+    mode   => '0775',
+  }
+
   service { "softioc-${name}":
     ensure     => $ensure,
     enable     => $enable,
@@ -61,6 +68,7 @@ define epics_softioc::ioc(
     require    => [
       Exec["create init script for softioc ${name}"],
       User[$name],
+      File["/var/lib/softioc-${name}"],
     ],
   }
 }
