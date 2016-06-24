@@ -1,6 +1,8 @@
 NAME=<%= @name %>
 PORT=<%= @consolePort %>
 HOST=<%= @fqdn %>
+USER=<%= @user %>
+CORESIZE=<%= @coresize %>
 CHDIR=<%= @absbootdir %>
 <% if @cfg_append -%>
   <%- @cfg_append.each do |string| -%>

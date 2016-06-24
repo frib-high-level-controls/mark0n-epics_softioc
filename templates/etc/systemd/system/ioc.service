@@ -1,0 +1,11 @@
+[Unit]
+Description=EPICS Soft IOC <%= @name %>
+
+[Service]
+EnvironmentFile=-/etc/iocs/<%= @name -%>/config
+ExecStart=/usr/bin/procServ --foreground --quiet --chdir=<%= @absbootdir -%> --ignore=^C^D^] --coresize=<%= @coresize -%> --restrict --logfile=<%= @procServLogfile -%> --name <%= @name -%> <%= @consolePort -%> <%= @absstartscript %>
+Restart=always
+User=<%= @user %>
+
+[Install]
+WantedBy=multi-user.target

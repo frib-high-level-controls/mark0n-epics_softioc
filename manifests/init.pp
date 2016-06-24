@@ -11,7 +11,7 @@ class epics_softioc($iocbase = '/usr/local/lib/iocapps') {
     ensure => installed,
   }
 
-  package { 'sysv-rc-softioc':
+  package { 'procserv':
     ensure => installed,
   }
 
@@ -19,12 +19,18 @@ class epics_softioc($iocbase = '/usr/local/lib/iocapps') {
     ensure => present,
   }
 
-  file { '/etc/default/epics-softioc':
-    content => template('epics_softioc/etc/default/epics-softioc'),
-    owner   => root,
-    group   => root,
-    mode    => '0644',
-    require => Package['sysv-rc-softioc'],
+  if $::initsystem != 'systemd' {
+    package { 'sysv-rc-softioc':
+      ensure => installed,
+    }
+
+    file { '/etc/default/epics-softioc':
+      content => template('epics_softioc/etc/default/epics-softioc'),
+      owner   => root,
+      group   => root,
+      mode    => '0644',
+      require => Package['sysv-rc-softioc'],
+    }
   }
 
   file { '/etc/iocs':

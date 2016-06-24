@@ -8,6 +8,7 @@ define epics_softioc::ioc(
   $bootdir     = "iocBoot/ioc\${HOST_ARCH}",
   $startscript = 'st.cmd',
   $consolePort = 4051,
+  $coresize    = 10000000,
   $cfg_append  = [],
 )
 {
@@ -25,32 +26,54 @@ define epics_softioc::ioc(
     $absbootdir = "${iocbase}/${name}"
   }
 
-  user { $name:
-    comment => "${name} testioc",
+  $user = "softioc-${name}"
+
+  user { $user:
+    comment => "${name} IOC",
     home    => "/epics/iocs/${name}",
     groups  => 'softioc',
   }
 
-  file { "/etc/iocs/${name}":
-    ensure  => directory,
-    group   => 'softioc',
-    require => Class['::epics_softioc'],
-  }
+  if $::initsystem == 'systemd' {
+    $procServLogfile = "/var/log/softioc-${name}"
+    $absstartscript = "${absbootdir}/${startscript}"
 
-  file { "/etc/iocs/${name}/config":
-    ensure  => present,
-    content => template('epics_softioc/etc/iocs/ioc_config'),
-    notify  => Service["softioc-${name}"],
-  }
+    file { "/etc/systemd/system/softioc-${name}.service":
+      content => template('/vagrant/environments/production/modules/epics_softioc/templates/etc/systemd/system/ioc.service'),
+      owner   => 'root',
+      group   => 'root',
+      mode    => '0644',
+    }
 
-  exec { "create init script for softioc ${name}":
-    command => "/usr/bin/manage-iocs install ${name}",
-    require => [
-      Class['epics_softioc'],
-      File["/etc/iocs/${name}/config"],
-      File[$iocbase],
-    ],
-    creates => "/etc/init.d/softioc-${name}",
+    exec { 'reload systemd configuration':
+      command     => '/bin/systemctl daemon-reload',
+      subscribe   => File["/etc/systemd/system/softioc-${name}.service"],
+      refreshonly => true,
+      notify      => Service["softioc-${name}"],
+    }
+  } else {
+    file { "/etc/iocs/${name}":
+      ensure  => directory,
+      group   => 'softioc',
+      require => Class['::epics_softioc'],
+    }
+
+    file { "/etc/iocs/${name}/config":
+      ensure  => present,
+      content => template('epics_softioc/etc/iocs/ioc_config'),
+      notify  => Service["softioc-${name}"],
+    }
+
+    exec { "create init script for softioc ${name}":
+      command => "/usr/bin/manage-iocs install ${name}",
+      require => [
+        Class['epics_softioc'],
+        File["/etc/iocs/${name}/config"],
+        File[$iocbase],
+      ],
+      creates => "/etc/init.d/softioc-${name}",
+      before  => Service["softioc-${name}"],
+    }
   }
 
   file { "/var/lib/softioc-${name}":
@@ -66,9 +89,9 @@ define epics_softioc::ioc(
     hasrestart => true,
     hasstatus  => true,
     require    => [
-      Exec["create init script for softioc ${name}"],
-      User[$name],
+      User[$user],
       File["/var/lib/softioc-${name}"],
+      Package['procserv'],
     ],
   }
 }
