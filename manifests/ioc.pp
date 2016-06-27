@@ -43,13 +43,7 @@ define epics_softioc::ioc(
       owner   => 'root',
       group   => 'root',
       mode    => '0644',
-    }
-
-    exec { 'reload systemd configuration':
-      command     => '/bin/systemctl daemon-reload',
-      subscribe   => File["/etc/systemd/system/softioc-${name}.service"],
-      refreshonly => true,
-      notify      => Service["softioc-${name}"],
+      notify  => Exec['reload systemd configuration'],
     }
   } else {
     file { "/etc/iocs/${name}":
@@ -90,8 +84,9 @@ define epics_softioc::ioc(
     hasstatus  => true,
     require    => [
       User[$user],
-      File["/var/lib/softioc-${name}"],
       Package['procserv'],
+      Exec['reload systemd configuration'],
     ],
+    subscribe  => File["/var/lib/softioc-${name}"],
   }
 }
