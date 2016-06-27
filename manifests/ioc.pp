@@ -39,7 +39,7 @@ define epics_softioc::ioc(
     $absstartscript = "${absbootdir}/${startscript}"
 
     file { "/etc/systemd/system/softioc-${name}.service":
-      content => template('/vagrant/environments/production/modules/epics_softioc/templates/etc/systemd/system/ioc.service'),
+      content => template("${module_name}/etc/systemd/system/ioc.service"),
       owner   => 'root',
       group   => 'root',
       mode    => '0644',
@@ -60,7 +60,7 @@ define epics_softioc::ioc(
 
     file { "/etc/iocs/${name}/config":
       ensure  => present,
-      content => template('epics_softioc/etc/iocs/ioc_config'),
+      content => template("${module_name}/etc/iocs/ioc_config"),
       notify  => Service["softioc-${name}"],
     }
 
