@@ -23,13 +23,22 @@ define epics_softioc::ioc(
   }
   $iocbase = $epics_softioc::iocbase
 
+  $abstopdir = "${iocbase}/${name}"
+
   if($bootdir) {
-    $absbootdir = "${iocbase}/${name}/${bootdir}"
+    $absbootdir = "${abstopdir}/${bootdir}"
   } else {
-    $absbootdir = "${iocbase}/${name}"
+    $absbootdir = $abstopdir
   }
 
   $user = "softioc-${name}"
+
+  exec { "build IOC ${name}":
+    command => '/usr/bin/make',
+    cwd     => $abstopdir,
+    creates => "${abstopdir}/bin",
+    require => Class['epics_softioc::software'],
+  }
 
   user { $user:
     comment => "${name} IOC",

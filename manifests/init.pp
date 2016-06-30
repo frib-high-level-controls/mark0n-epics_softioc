@@ -3,17 +3,7 @@
 # directories and configuration files.
 #
 class epics_softioc($iocbase = '/usr/local/lib/iocapps') {
-  package { 'epics-dev':
-    ensure => installed,
-  }
-
-  package { 'telnet':
-    ensure => installed,
-  }
-
-  package { 'procserv':
-    ensure => installed,
-  }
+  include epics_softioc::software
 
   group { 'softioc':
     ensure => present,
