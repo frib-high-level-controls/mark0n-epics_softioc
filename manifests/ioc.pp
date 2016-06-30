@@ -88,12 +88,14 @@ define epics_softioc::ioc(
     mode   => '0775',
   }
 
-  file { "/etc/logrotate.d/softioc-${name}":
-    ensure  => present,
-    content => template("${module_name}/etc/logrotate.d/softioc"),
-    owner   => 'root',
-    group   => 'root',
-    mode    => '0644',
+  logrotate::rule { "softioc-${name}":
+    path         => $procServ_logfile,
+    rotate_every => 'day',
+    rotate       => $logrotate_rotate,
+    size         => $logrotate_size,
+    missingok    => true,
+    ifempty      => false,
+    postrotate   => "/bin/systemctl kill --signal=HUP --kill-who=main softioc-${name}.service",
   }
 
   service { "softioc-${name}":
