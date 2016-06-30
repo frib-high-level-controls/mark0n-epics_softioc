@@ -3,13 +3,16 @@
 # registers the service.
 #
 define epics_softioc::ioc(
-  $ensure      = undef,
-  $enable      = undef,
-  $bootdir     = "iocBoot/ioc\${HOST_ARCH}",
-  $startscript = 'st.cmd',
-  $consolePort = 4051,
-  $coresize    = 10000000,
-  $cfg_append  = [],
+  $ensure           = undef,
+  $enable           = undef,
+  $bootdir          = "iocBoot/ioc\${HOST_ARCH}",
+  $startscript      = 'st.cmd',
+  $consolePort      = 4051,
+  $coresize         = 10000000,
+  $cfg_append       = [],
+  $procServ_logfile = "/var/log/softioc/${name}-procServ.log",
+  $logrotate_rotate = 30,
+  $logrotate_size   = '10M',
 )
 {
   if $ensure and !($ensure in ['running', 'stopped']) {
@@ -35,7 +38,6 @@ define epics_softioc::ioc(
   }
 
   if $::initsystem == 'systemd' {
-    $procServLogfile = "/var/log/softioc-${name}"
     $absstartscript = "${absbootdir}/${startscript}"
 
     file { "/etc/systemd/system/softioc-${name}.service":
@@ -75,6 +77,14 @@ define epics_softioc::ioc(
     owner  => 'root',
     group  => 'softioc',
     mode   => '0775',
+  }
+
+  file { "/etc/logrotate.d/softioc-${name}":
+    ensure  => present,
+    content => template("${module_name}/etc/logrotate.d/softioc"),
+    owner   => 'root',
+    group   => 'root',
+    mode    => '0644',
   }
 
   service { "softioc-${name}":

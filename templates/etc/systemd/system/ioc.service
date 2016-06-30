@@ -5,7 +5,7 @@ After=network.target
 
 [Service]
 EnvironmentFile=-/etc/iocs/<%= @name -%>/config
-ExecStart=/usr/bin/procServ --foreground --quiet --chdir=<%= @absbootdir -%> --ignore=^C^D^] --coresize=<%= @coresize -%> --restrict --logfile=<%= @procServLogfile -%> --name <%= @name -%> <%= @consolePort -%> <%= @absstartscript %>
+ExecStart=/usr/bin/procServ --foreground --quiet --chdir=<%= @absbootdir -%> --ignore=^C^D^] --coresize=<%= @coresize -%> --restrict --logfile=<%= @procServ_logfile -%> --name <%= @name -%> <%= @consolePort -%> <%= @absstartscript %>
 Restart=always
 User=<%= @user %>
 

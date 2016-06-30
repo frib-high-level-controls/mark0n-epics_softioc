@@ -46,6 +46,13 @@ class epics_softioc($iocbase = '/usr/local/lib/iocapps') {
     mode   => '2755',
   }
 
+  file { '/var/log/softioc':
+    ensure => directory,
+    owner  => 'root',
+    group  => 'softioc',
+    mode   => '2775',
+  }
+
   if $::initsystem == 'systemd' {
     exec { 'reload systemd configuration':
       command     => '/bin/systemctl daemon-reload',

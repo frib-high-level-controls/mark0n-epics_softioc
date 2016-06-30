@@ -1,0 +1,10 @@
+<%= @procServLogfile %> {
+  rotate <%= @logrotate_rotate %>
+  daily
+  missingok
+  notifempty
+  size <%= @logrotate_size %>
+  postrotate
+    /bin/systemctl kill --signal=HUP --kill-who=main softioc-<%= @name %>.service
+  endscript
+}
