@@ -2,6 +2,10 @@
 # soft IOC.
 #
 class epics_softioc::software() {
+  package { 'build-essential':
+    ensure => installed,
+  }
+
   package { 'epics-dev':
     ensure => installed,
   }
