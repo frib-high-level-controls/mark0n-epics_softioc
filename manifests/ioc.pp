@@ -98,16 +98,32 @@ define epics_softioc::ioc(
     postrotate   => "/bin/systemctl kill --signal=HUP --kill-who=main softioc-${name}.service",
   }
 
-  service { "softioc-${name}":
-    ensure     => $ensure,
-    enable     => $enable,
-    hasrestart => true,
-    hasstatus  => true,
-    require    => [
-      User[$user],
-      Package['procserv'],
-      Exec['reload systemd configuration'],
-    ],
-    subscribe  => File["/var/lib/softioc-${name}"],
+  if $::initsystem == 'systemd' {
+    service { "softioc-${name}":
+      ensure     => $ensure,
+      enable     => $enable,
+      hasrestart => true,
+      hasstatus  => true,
+      provider   => 'systemd',
+      require    => [
+        User[$user],
+        Package['procserv'],
+        Exec['reload systemd configuration'],
+      ],
+      subscribe  => File["/var/lib/softioc-${name}"],
+    }
+  } else {
+    service { "softioc-${name}":
+      ensure     => $ensure,
+      enable     => $enable,
+      hasrestart => true,
+      hasstatus  => true,
+      require    => [
+        User[$user],
+        Package['procserv'],
+        Exec['reload systemd configuration'],
+      ],
+      subscribe  => File["/var/lib/softioc-${name}"],
+    }
   }
 }
