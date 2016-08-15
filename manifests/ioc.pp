@@ -13,6 +13,7 @@ define epics_softioc::ioc(
   $procServ_logfile = "/var/log/softioc/${name}-procServ.log",
   $logrotate_rotate = 30,
   $logrotate_size   = '10M',
+  $uid              = undef,
 )
 {
   if $ensure and !($ensure in ['running', 'stopped']) {
@@ -31,6 +32,10 @@ define epics_softioc::ioc(
     $absbootdir = $abstopdir
   }
 
+  if $uid {
+    validate_integer($uid)
+  }
+
   $user = "softioc-${name}"
 
   exec { "build IOC ${name}":
@@ -44,6 +49,7 @@ define epics_softioc::ioc(
     comment => "${name} IOC",
     home    => "/epics/iocs/${name}",
     groups  => 'softioc',
+    uid     => $uid,
   }
 
   if $::initsystem == 'systemd' {
