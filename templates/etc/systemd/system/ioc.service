@@ -4,6 +4,9 @@ Requires=network.target
 After=network.target
 
 [Service]
+<% @real_env_vars.each_pair do |key, val| -%>
+Environment="<%= key %>=<%= val %>"
+<% end -%>
 EnvironmentFile=-/etc/iocs/<%= @name -%>/config
 ExecStart=/usr/bin/procServ --foreground --quiet --chdir=<%= @absbootdir -%> --ignore=^C^D^] --coresize=<%= @coresize -%> --restrict --logfile=<%= @procServ_logfile -%> --name <%= @name -%> <%= @consolePort -%> <%= @absstartscript %>
 Restart=always

@@ -3,17 +3,23 @@
 # registers the service.
 #
 define epics_softioc::ioc(
-  $ensure           = undef,
-  $enable           = undef,
-  $bootdir          = "iocBoot/ioc\${HOST_ARCH}",
-  $startscript      = 'st.cmd',
-  $consolePort      = 4051,
-  $coresize         = 10000000,
-  $cfg_append       = [],
-  $procServ_logfile = "/var/log/softioc/${name}-procServ.log",
-  $logrotate_rotate = 30,
-  $logrotate_size   = '10M',
-  $uid              = undef,
+  $ensure             = undef,
+  $enable             = undef,
+  $bootdir            = "iocBoot/ioc\${HOST_ARCH}",
+  $ca_addr_list       = undef,
+  $ca_auto_addr_list  = undef,
+  $ca_max_array_bytes = undef,
+  $startscript        = 'st.cmd',
+  $consolePort        = 4051,
+  $coresize           = 10000000,
+  $cfg_append         = [],
+  $env_vars           = {},
+  $log_port           = undef,
+  $log_server         = undef,
+  $procServ_logfile   = "/var/log/softioc/${name}-procServ.log",
+  $logrotate_rotate   = 30,
+  $logrotate_size     = '10M',
+  $uid                = undef,
 )
 {
   if $ensure and !($ensure in ['running', 'stopped']) {
@@ -31,6 +37,49 @@ define epics_softioc::ioc(
   } else {
     $absbootdir = $abstopdir
   }
+
+  validate_hash($env_vars)
+
+  if $ca_addr_list {
+    validate_string($ca_addr_list)
+    $env_vars2 = merge($env_vars, {'CA_ADDR_LIST' => $ca_addr_list})
+  } else {
+    $env_vars2 = $env_vars
+  }
+
+  if $ca_auto_addr_list {
+    validate_bool($ca_auto_addr_list)
+    $auto_addr_list_str = $ca_auto_addr_list ? {
+      true  => 'YES',
+      false => 'NO',
+    }
+    $env_vars3 = merge($env_vars2, {'CA_AUTO_ADDR_LIST' => $auto_addr_list_str})
+  } else {
+    $env_vars3 = $env_vars2
+  }
+
+  if $ca_max_array_bytes {
+    validate_integer($ca_max_array_bytes, undef, 16384)
+    $env_vars4 = merge($env_vars3, {'CA_MAX_ARRAY_BYTES' => $ca_max_array_bytes})
+  } else {
+    $env_vars4 = $env_vars3
+  }
+
+  if $log_port {
+    validate_integer($log_port, 65535, 1)
+    $env_vars5 = merge($env_vars4, {'EPICS_IOC_LOG_PORT' => $log_port})
+  } else {
+    $env_vars5 = $env_vars4
+  }
+
+  if $log_server {
+    validate_string($log_server)
+    $real_env_vars = merge($env_vars5, {'EPICS_IOC_LOG_INET' => $log_server})
+  } else {
+    $real_env_vars = $env_vars5
+  }
+
+notify { "real env vars: $real_env_vars": }
 
   if $uid {
     validate_integer($uid)
