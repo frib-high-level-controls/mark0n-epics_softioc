@@ -1,8 +1,14 @@
   This Puppet module installs and configures an EPICS soft IOC. The IOC is run
   in procserv to ease maintenance. The IOC can be started/stopped using an init
   script.
+  On systems that use systemd as init system (e.g. Debian Jessie) a systemd
+  unit file will be created for each IOC process. On older systems (e.g. Debian
+  Wheezy) this module relies on sysv-rc-softioc for creating System V init
+  scripts instead.
 
-Example:
+# Examples
+
+## Simple
 
   $iocbase = '/usr/local/lib/iocapps'
 
@@ -14,9 +20,40 @@ Example:
     ensure      => running,
     enable      => true,
     bootdir     => 'iocBoot/ioclinux-x86_64',
-    consolePort => '4051',
     require     => File["${iocbase}/mysoftioc"],
   }
 
-Contact:
+## Complex
+  In this example we run two IOC processes on the same machine. Thus different
+  ProcServ ports need to be used. See the first block for an example of setting
+  facility-wide defaults.
+
+  Epics_softioc::Ioc {
+    log_port   => 6500,
+    log_server => 'logserver.example.com',
+  }
+
+  $iocbase = '/usr/local/lib/iocapps'
+
+  class { 'epics_softioc':
+    iocbase => $iocbase,
+  }
+
+  epics_softioc::ioc { 'vacuum':
+    ensure      => running,
+    enable      => true,
+    bootdir     => 'iocBoot/ioclinux-x86_64',
+    consolePort => 4051,
+    require     => File["${iocbase}/vacuum"],
+  }
+
+  epics_softioc::ioc { 'llrf':
+    ensure      => running,
+    enable      => true,
+    bootdir     => 'iocBoot/ioclinux-x86_64',
+    consolePort => 4052,
+    require     => File["${iocbase}/llrf"],
+  }
+
+# Contact
   Author: Martin Konrad <konrad at frib.msu.edu>
