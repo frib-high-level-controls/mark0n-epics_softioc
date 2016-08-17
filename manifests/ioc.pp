@@ -79,8 +79,6 @@ define epics_softioc::ioc(
     $real_env_vars = $env_vars5
   }
 
-notify { "real env vars: $real_env_vars": }
-
   if $uid {
     validate_integer($uid)
   }
