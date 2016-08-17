@@ -42,7 +42,7 @@ define epics_softioc::ioc(
 
   if $ca_addr_list {
     validate_string($ca_addr_list)
-    $env_vars2 = merge($env_vars, {'CA_ADDR_LIST' => $ca_addr_list})
+    $env_vars2 = merge($env_vars, {'EPICS_CA_ADDR_LIST' => $ca_addr_list})
   } else {
     $env_vars2 = $env_vars
   }
@@ -53,14 +53,14 @@ define epics_softioc::ioc(
       true  => 'YES',
       false => 'NO',
     }
-    $env_vars3 = merge($env_vars2, {'CA_AUTO_ADDR_LIST' => $auto_addr_list_str})
+    $env_vars3 = merge($env_vars2, {'EPICS_CA_AUTO_ADDR_LIST' => $auto_addr_list_str})
   } else {
     $env_vars3 = $env_vars2
   }
 
   if $ca_max_array_bytes {
     validate_integer($ca_max_array_bytes, undef, 16384)
-    $env_vars4 = merge($env_vars3, {'CA_MAX_ARRAY_BYTES' => $ca_max_array_bytes})
+    $env_vars4 = merge($env_vars3, {'EPICS_CA_MAX_ARRAY_BYTES' => $ca_max_array_bytes})
   } else {
     $env_vars4 = $env_vars3
   }
