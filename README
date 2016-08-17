@@ -6,6 +6,21 @@
   Wheezy) this module relies on sysv-rc-softioc for creating System V init
   scripts instead.
 
+# Environment Variables
+  Some attributes of the Epics_softioc::Ioc class cause environment variables
+  to be set. Please refer to the following table for a list:
+
+  | Attribute          | Environment Variable     |
+  |--------------------|--------------------------|
+  | ca_addr_list       | EPICS_CA_ADDR_LIST       |
+  | ca_auto_addr_list  | EPICS_CA_AUTO_ADDR_LIST  |
+  | ca_max_array_bytes | EPICS_CA_MAX_ARRAY_BYTES |
+  | log_port           | EPICS_IOC_LOG_PORT       |
+  | log_server         | EPICS_IOC_LOG_INET       |
+
+  Environment variables that are not on this list can be set using the
+  `env_vars` attribute.
+
 # Examples
 
 ## Simple
@@ -40,11 +55,18 @@
   }
 
   epics_softioc::ioc { 'vacuum':
-    ensure      => running,
-    enable      => true,
-    bootdir     => 'iocBoot/ioclinux-x86_64',
-    consolePort => 4051,
-    require     => File["${iocbase}/vacuum"],
+    ensure            => running,
+    enable            => true,
+    bootdir           => 'iocBoot/ioclinux-x86_64',
+    consolePort       => 4051,
+    ca_addr_list      => '',
+    ca_auto_addr_list => true,
+    env_vars          => {
+      'EPICS_CA_CONN_TMO'     => '1',
+      'EPICS_CA_NAME_SERVERS' => 'nameserver.example.com',
+    },
+    uid               => 900,
+    require           => File["${iocbase}/vacuum"],
   }
 
   epics_softioc::ioc { 'llrf':
@@ -52,6 +74,7 @@
     enable      => true,
     bootdir     => 'iocBoot/ioclinux-x86_64',
     consolePort => 4052,
+    uid         => 901,
     require     => File["${iocbase}/llrf"],
   }
 
