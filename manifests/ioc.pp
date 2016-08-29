@@ -3,23 +3,25 @@
 # registers the service.
 #
 define epics_softioc::ioc(
-  $ensure             = undef,
-  $enable             = undef,
-  $bootdir            = "iocBoot/ioc\${HOST_ARCH}",
-  $ca_addr_list       = undef,
-  $ca_auto_addr_list  = undef,
-  $ca_max_array_bytes = undef,
-  $startscript        = 'st.cmd',
-  $consolePort        = 4051,
-  $coresize           = 10000000,
-  $cfg_append         = [],
-  $env_vars           = {},
-  $log_port           = undef,
-  $log_server         = undef,
-  $procServ_logfile   = "/var/log/softioc/${name}-procServ.log",
-  $logrotate_rotate   = 30,
-  $logrotate_size     = '10M',
-  $uid                = undef,
+  $ensure              = undef,
+  $enable              = undef,
+  $manage_autosave_dir = false,
+  $autosave_base_dir   = '/var/lib',
+  $bootdir             = "iocBoot/ioc\${HOST_ARCH}",
+  $ca_addr_list        = undef,
+  $ca_auto_addr_list   = undef,
+  $ca_max_array_bytes  = undef,
+  $startscript         = 'st.cmd',
+  $consolePort         = 4051,
+  $coresize            = 10000000,
+  $cfg_append          = [],
+  $env_vars            = {},
+  $log_port            = undef,
+  $log_server          = undef,
+  $procServ_logfile    = "/var/log/softioc/${name}-procServ.log",
+  $logrotate_rotate    = 30,
+  $logrotate_size      = '10M',
+  $uid                 = undef,
 )
 {
   if $ensure and !($ensure in ['running', 'stopped']) {
@@ -31,6 +33,11 @@ define epics_softioc::ioc(
   $iocbase = $epics_softioc::iocbase
 
   $abstopdir = "${iocbase}/${name}"
+
+  validate_bool($manage_autosave_dir)
+  if($manage_autosave_dir) {
+    validate_absolute_path($autosave_base_dir)
+  }
 
   if($bootdir) {
     $absbootdir = "${abstopdir}/${bootdir}"
@@ -99,6 +106,16 @@ define epics_softioc::ioc(
     uid     => $uid,
   }
 
+  if($manage_autosave_dir) {
+    file { "${autosave_base_dir}/softioc-${name}":
+      ensure => directory,
+      owner  => $user,
+      group  => 'softioc',
+      mode   => '0775',
+      before => Service["softioc-${name}"],
+    }
+  }
+
   if $::initsystem == 'systemd' {
     $absstartscript = "${absbootdir}/${startscript}"
 
@@ -132,13 +149,6 @@ define epics_softioc::ioc(
       creates => "/etc/init.d/softioc-${name}",
       before  => Service["softioc-${name}"],
     }
-  }
-
-  file { "/var/lib/softioc-${name}":
-    ensure => directory,
-    owner  => 'root',
-    group  => 'softioc',
-    mode   => '0775',
   }
 
   logrotate::rule { "softioc-${name}":

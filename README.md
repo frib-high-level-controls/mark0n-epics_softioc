@@ -45,8 +45,9 @@ facility-wide defaults.
 
 ```
 Epics_softioc::Ioc {
-  log_port   => 6500,
-  log_server => 'logserver.example.com',
+  log_port            => 6500,
+  log_server          => 'logserver.example.com',
+  manage_autosave_dir => true,
 }
 
 $iocbase = '/usr/local/lib/iocapps'
