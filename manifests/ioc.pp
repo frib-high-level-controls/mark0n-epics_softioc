@@ -81,9 +81,15 @@ define epics_softioc::ioc(
 
   if $log_server {
     validate_string($log_server)
-    $real_env_vars = merge($env_vars5, {'EPICS_IOC_LOG_INET' => $log_server})
+    $real_env_vars6 = merge($env_vars5, {'EPICS_IOC_LOG_INET' => $log_server})
   } else {
-    $real_env_vars = $env_vars5
+    $real_env_vars6 = $env_vars5
+  }
+
+  if $manage_autosave_dir {
+    $real_env_vars = merge($env_vars6, {'AUTOSAVE_DIR' => "${autosave_base_dir}/softioc-${name}"})
+  } else {
+    $real_env_vars = $env_vars6
   }
 
   if $uid {
