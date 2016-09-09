@@ -6,6 +6,7 @@ define epics_softioc::ioc(
   $ensure              = undef,
   $enable              = undef,
   $manage_autosave_dir = false,
+  $auto_restart_ioc    = true,
   $autosave_base_dir   = '/var/lib',
   $bootdir             = "iocBoot/ioc\${HOST_ARCH}",
   $ca_addr_list        = undef,
@@ -33,6 +34,8 @@ define epics_softioc::ioc(
   $iocbase = $epics_softioc::iocbase
 
   $abstopdir = "${iocbase}/${name}"
+
+  validate_bool($auto_restart_ioc)
 
   validate_bool($manage_autosave_dir)
   if($manage_autosave_dir) {
@@ -179,7 +182,6 @@ define epics_softioc::ioc(
         Package['procserv'],
         Exec['reload systemd configuration'],
       ],
-      subscribe  => File["/var/lib/softioc-${name}"],
     }
   } else {
     service { "softioc-${name}":
@@ -192,7 +194,10 @@ define epics_softioc::ioc(
         Package['procserv'],
         Exec['reload systemd configuration'],
       ],
-      subscribe  => File["/var/lib/softioc-${name}"],
     }
+  }
+
+  if $auto_restart_ioc {
+    Exec["build IOC ${name}"] ~> Service["softioc-${name}"]
   }
 }
