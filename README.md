@@ -68,6 +68,7 @@ epics_softioc::ioc { 'vacuum':
     'EPICS_CA_NAME_SERVERS' => 'nameserver.example.com',
   },
   uid               => 900,
+  run_make          => false,
   require           => File["${iocbase}/vacuum"],
 }
 

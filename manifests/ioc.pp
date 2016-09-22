@@ -22,6 +22,7 @@ define epics_softioc::ioc(
   $procServ_logfile    = "/var/log/softioc/${name}-procServ.log",
   $logrotate_rotate    = 30,
   $logrotate_size      = '10M',
+  $run_make            = true,
   $uid                 = undef,
 )
 {
@@ -101,11 +102,13 @@ define epics_softioc::ioc(
 
   $user = "softioc-${name}"
 
-  exec { "build IOC ${name}":
-    command => '/usr/bin/make',
-    cwd     => $abstopdir,
-    unless  => '/usr/bin/make --dry-run',
-    require => Class['epics_softioc::software'],
+  if $run_make {
+    exec { "build IOC ${name}":
+      command => '/usr/bin/make',
+      cwd     => $abstopdir,
+      unless  => '/usr/bin/make --dry-run',
+      require => Class['epics_softioc::software'],
+    }
   }
 
   user { $user:
@@ -178,6 +181,7 @@ define epics_softioc::ioc(
       hasstatus  => true,
       provider   => 'systemd',
       require    => [
+        Class['epics_softioc::software'],
         User[$user],
         Package['procserv'],
         Exec['reload systemd configuration'],
@@ -190,6 +194,7 @@ define epics_softioc::ioc(
       hasrestart => true,
       hasstatus  => true,
       require    => [
+        Class['epics_softioc::software'],
         User[$user],
         Package['procserv'],
         Exec['reload systemd configuration'],
@@ -197,7 +202,7 @@ define epics_softioc::ioc(
     }
   }
 
-  if $auto_restart_ioc {
+  if $run_make and $auto_restart_ioc {
     Exec["build IOC ${name}"] ~> Service["softioc-${name}"]
   }
 }
