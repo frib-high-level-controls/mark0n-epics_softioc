@@ -24,6 +24,7 @@ define epics_softioc::ioc(
   $logrotate_size      = '10M',
   $run_make            = true,
   $uid                 = undef,
+  $abstopdir           = "${epics_softioc::iocbase}/${name}",
 )
 {
   if $ensure and !($ensure in ['running', 'stopped']) {
@@ -33,8 +34,6 @@ define epics_softioc::ioc(
     validate_bool($enable)
   }
   $iocbase = $epics_softioc::iocbase
-
-  $abstopdir = "${iocbase}/${name}"
 
   validate_bool($auto_restart_ioc)
 
