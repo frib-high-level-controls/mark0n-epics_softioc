@@ -105,7 +105,7 @@ define epics_softioc::ioc(
     exec { "build IOC ${name}":
       command => '/usr/bin/make',
       cwd     => $abstopdir,
-      unless  => '/usr/bin/make --dry-run',
+      unless  => '/usr/bin/make --question',
       require => Class['epics_softioc::software'],
     }
   }
