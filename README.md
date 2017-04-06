@@ -252,6 +252,36 @@ correctly to prevent surprises.
 
 Base file name of the IOC start script. This defaults to `st.cmd`.
 
+### `systemd_after`
+
+Ensures the IOC service is started after the specified `systemd` units have been
+activated. Please specify an array of strings. Default: `network.target`.
+
+This parameter is ignored on systems that are not using `systemd`.
+
+Note: This enforces only the correct order. It does not cause the specified
+targets to be activated. Also see `systemd_requires`.
+
+### `systemd_requires`
+
+Ensures the specified `systemd` units are activated when this IOC is started.
+Default: `network.target`.
+
+This parameter is ignored on systems that are not using `systemd`.
+
+Note: This only ensures that the required services are started. That generally
+means that `systemd` starts them in parallel to the IOC service. Please use
+`systemd_after` to ensure they are started before the IOC is started.
+
+### `systemd_requires_mounts_for`
+
+Ensures the specified paths are accessible (e.g. the corresponding file systems
+are mounted) when this IOC is started. Specify an array of strings. Default:
+`[]`.
+
+This parameter is ignored on systems that are not using `systemd`.
+
+
 ### `uid`
 
 Defines the system user id the IOC process is supposed to run with. The

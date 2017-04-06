@@ -3,32 +3,35 @@
 # registers the service.
 #
 define epics_softioc::ioc(
-  $ensure              = undef,
-  $enable              = undef,
-  $manage_autosave_dir = false,
-  $auto_restart_ioc    = true,
-  $autosave_base_dir   = '/var/lib',
-  $bootdir             = "iocBoot/ioc\${HOST_ARCH}",
-  $ca_addr_list        = undef,
-  $ca_auto_addr_list   = undef,
-  $ca_max_array_bytes  = undef,
-  $startscript         = 'st.cmd',
-  $consolePort         = 4051,
-  $coresize            = 10000000,
-  $cfg_append          = [],
-  $env_vars            = {},
-  $log_port            = 7004,
-  $log_server          = undef,
-  $ca_sec_file         = undef,
-  $procServ_logfile    = "/var/log/softioc-${name}/procServ.log",
-  $logrotate_compress  = true,
-  $logrotate_rotate    = 30,
-  $logrotate_size      = '10M',
-  $run_make            = true,
-  $uid                 = undef,
-  $abstopdir           = "${epics_softioc::iocbase}/${name}",
-  $username            = "softioc-${name}",
-  $manage_user         = true,
+  $ensure                      = undef,
+  $enable                      = undef,
+  $manage_autosave_dir         = false,
+  $auto_restart_ioc            = true,
+  $autosave_base_dir           = '/var/lib',
+  $bootdir                     = "iocBoot/ioc\${HOST_ARCH}",
+  $ca_addr_list                = undef,
+  $ca_auto_addr_list           = undef,
+  $ca_max_array_bytes          = undef,
+  $startscript                 = 'st.cmd',
+  $consolePort                 = 4051,
+  $coresize                    = 10000000,
+  $cfg_append                  = [],
+  $env_vars                    = {},
+  $log_port                    = 7004,
+  $log_server                  = undef,
+  $ca_sec_file                 = undef,
+  $procServ_logfile            = "/var/log/softioc-${name}/procServ.log",
+  $logrotate_compress          = true,
+  $logrotate_rotate            = 30,
+  $logrotate_size              = '10M',
+  $run_make                    = true,
+  $uid                         = undef,
+  $abstopdir                   = "${epics_softioc::iocbase}/${name}",
+  $username                    = "softioc-${name}",
+  $manage_user                 = true,
+  $systemd_after               = [ 'network.target' ],
+  $systemd_requires            = [ 'network.target' ],
+  $systemd_requires_mounts_for = [],
 )
 {
   if $ensure and !($ensure in ['running', 'stopped']) {
@@ -109,6 +112,10 @@ define epics_softioc::ioc(
   if $uid {
     validate_integer($uid)
   }
+
+  validate_array($systemd_after)
+  validate_array($systemd_requires)
+  validate_array($systemd_requires_mounts_for)
 
   if $run_make {
     exec { "build IOC ${name}":
