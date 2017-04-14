@@ -187,7 +187,7 @@ Defaults to `{}`.
 ### `log_port`
 
 Allows to configure the `EPICS_IOC_LOG_PORT` environment variable for the IOC.
-The default is undefined (environment variable not set).
+The default is 7004 (the default port used by iocLogServer).
 
 ### `log_server`
 

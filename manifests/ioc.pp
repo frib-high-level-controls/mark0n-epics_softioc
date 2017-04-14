@@ -17,7 +17,7 @@ define epics_softioc::ioc(
   $coresize            = 10000000,
   $cfg_append          = [],
   $env_vars            = {},
-  $log_port            = undef,
+  $log_port            = 7004,
   $log_server          = undef,
   $procServ_logfile    = "/var/log/softioc/${name}-procServ.log",
   $logrotate_rotate    = 30,
