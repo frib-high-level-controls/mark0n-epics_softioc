@@ -44,7 +44,7 @@ class epics_softioc(
     ensure => directory,
     owner  => 'root',
     group  => 'softioc',
-    mode   => '2775',
+    mode   => '2755',
   }
 
   if $::initsystem == 'systemd' {
