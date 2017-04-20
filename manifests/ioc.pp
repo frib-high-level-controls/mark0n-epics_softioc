@@ -19,7 +19,7 @@ define epics_softioc::ioc(
   $env_vars            = {},
   $log_port            = 7004,
   $log_server          = undef,
-  $procServ_logfile    = "/var/log/softioc/${name}-procServ.log",
+  $procServ_logfile    = "/var/log/softioc-${name}/procServ.log",
   $logrotate_rotate    = 30,
   $logrotate_size      = '10M',
   $run_make            = true,
@@ -162,6 +162,13 @@ define epics_softioc::ioc(
     }
   }
 
+  file { "/var/log/softioc-${name}":
+    ensure => directory,
+    owner  => $user,
+    group  => 'softioc',
+    mode   => '2755',
+  }
+
   logrotate::rule { "softioc-${name}":
     path         => $procServ_logfile,
     rotate_every => 'day',
@@ -197,6 +204,7 @@ define epics_softioc::ioc(
         User[$user],
         Package['procserv'],
         Exec['reload systemd configuration'],
+        File["/var/log/softioc-${name}"],
       ],
     }
   }

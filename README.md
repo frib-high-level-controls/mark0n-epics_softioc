@@ -215,7 +215,7 @@ be set up appropriately. The `AUTOSAVE_DIR` environment variable will be set to
 ### `procServ_logfile`
 
 The log file that `procServ` uses to log activity on the IOC shell. Default:
-`/var/log/softioc/<ioc_name>-procServ.log`.
+`/var/log/softioc-<ioc_name>/procServ.log`.
 
 ### `run_make`
 
