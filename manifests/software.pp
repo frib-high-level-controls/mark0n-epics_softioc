@@ -3,18 +3,16 @@
 #
 class epics_softioc::software() {
   package { 'build-essential':
-    ensure => installed,
+    ensure => hiera('epics_softioc::software::ensure_build-essential', 'latest'),
   }
 
   package { 'epics-dev':
-    ensure => installed,
+    ensure => hiera('epics_softioc::software::ensure_epics-dev', 'latest'),
   }
 
-  package { 'telnet':
-    ensure => installed,
-  }
+  include 'telnet'
 
   package { 'procserv':
-    ensure => installed,
+    ensure => hiera('epics_softioc::software::ensure_procserv', 'latest'),
   }
 }
