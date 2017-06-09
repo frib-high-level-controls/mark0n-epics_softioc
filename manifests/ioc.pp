@@ -103,10 +103,11 @@ define epics_softioc::ioc(
 
   if $run_make {
     exec { "build IOC ${name}":
-      command => '/usr/bin/make',
-      cwd     => $abstopdir,
-      unless  => '/usr/bin/make CHECK_RELEASE=NO CHECK_RELEASE_NO= --question',
-      require => Class['epics_softioc::software'],
+      command   => '/usr/bin/make',
+      cwd       => $abstopdir,
+      unless    => '/usr/bin/make CHECK_RELEASE=NO CHECK_RELEASE_NO= --question',
+      require   => Class['epics_softioc::software'],
+      subscribe => Package['epics-dev'],
     }
   }
 
