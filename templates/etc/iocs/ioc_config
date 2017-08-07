@@ -1,7 +1,7 @@
 NAME=<%= @name %>
 PORT=<%= @consolePort %>
 HOST=<%= @fqdn %>
-USER=<%= @user %>
+USER=<%= @username %>
 CORESIZE=<%= @coresize %>
 CHDIR=<%= @absbootdir %>
 <% if @cfg_append -%>
