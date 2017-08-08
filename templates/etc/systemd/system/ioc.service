@@ -10,7 +10,7 @@ Environment="<%= key %>=<%= val %>"
 EnvironmentFile=-/etc/iocs/<%= @name -%>/config
 ExecStart=/usr/bin/procServ --foreground --quiet --chdir=<%= @absbootdir -%> --ignore=^C^D^] --coresize=<%= @coresize -%> --restrict --logfile=<%= @procServ_logfile -%> --name <%= @name -%> <%= @consolePort -%> <%= @absstartscript %>
 Restart=always
-User=<%= @user %>
+User=<%= @username %>
 
 [Install]
 WantedBy=multi-user.target

@@ -25,6 +25,8 @@ define epics_softioc::ioc(
   $run_make            = true,
   $uid                 = undef,
   $abstopdir           = "${epics_softioc::iocbase}/${name}",
+  $username            = "softioc-${name}",
+  $manage_user         = true,
 )
 {
   if $ensure and !($ensure in ['running', 'stopped']) {
@@ -99,8 +101,6 @@ define epics_softioc::ioc(
     validate_integer($uid)
   }
 
-  $user = "softioc-${name}"
-
   if $run_make {
     exec { "build IOC ${name}":
       command   => '/usr/bin/make distclean all',
@@ -111,17 +111,20 @@ define epics_softioc::ioc(
     }
   }
 
-  user { $user:
-    comment => "${name} IOC",
-    home    => "/epics/iocs/${name}",
-    groups  => 'softioc',
-    uid     => $uid,
+  if $manage_user {
+    user { $username:
+      comment => "${name} IOC",
+      home    => "/epics/iocs/${name}",
+      groups  => 'softioc',
+      uid     => $uid,
+      before  => Service["softioc-${name}"],
+    }
   }
 
   if($manage_autosave_dir) {
     file { "${autosave_base_dir}/softioc-${name}":
       ensure => directory,
-      owner  => $user,
+      owner  => $username,
       group  => 'softioc',
       mode   => '0775',
       before => Service["softioc-${name}"],
@@ -165,7 +168,7 @@ define epics_softioc::ioc(
 
   file { "/var/log/softioc-${name}":
     ensure => directory,
-    owner  => $user,
+    owner  => $username,
     group  => 'softioc',
     mode   => '2755',
   }
@@ -189,7 +192,6 @@ define epics_softioc::ioc(
       provider   => 'systemd',
       require    => [
         Class['epics_softioc::software'],
-        User[$user],
         Package['procserv'],
         Exec['reload systemd configuration'],
       ],
@@ -202,7 +204,6 @@ define epics_softioc::ioc(
       hasstatus  => true,
       require    => [
         Class['epics_softioc::software'],
-        User[$user],
         Package['procserv'],
         Exec['reload systemd configuration'],
         File["/var/log/softioc-${name}"],

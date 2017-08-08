@@ -212,6 +212,12 @@ created (users need to ensure the parent directory exists) and permissions will
 be set up appropriately. The `AUTOSAVE_DIR` environment variable will be set to
 <autosave_base_dir>/softioc-<ioc_name>. Also see `autosave_base_dir`.
 
+### `manage_user`
+
+Whether to create the user account the IOC is running as. Set to false to use a
+user account that is managed by Puppet code outside of this module. Disable if
+you want multiple IOCs to share the same user account. Defaults to `true`.
+
 ### `procServ_logfile`
 
 The log file that `procServ` uses to log activity on the IOC shell. Default:
@@ -239,7 +245,13 @@ Base file name of the IOC start script. This defaults to `st.cmd`.
 
 Defines the system user id the IOC process is supposed to run with. The
 corresponding user is created automatically. If you leave this undefined an
-arbitrary user id will be picked.
+arbitrary user id will be picked. This argument is only used if `manage_user` is
+`true`.
+
+### `username`
+
+The user name the IOC will run as. By default `softioc-<ioc_name>` is being
+used.
 
 # Contact
 
