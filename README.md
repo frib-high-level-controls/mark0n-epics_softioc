@@ -18,6 +18,7 @@ be set. Please refer to the following table for a list:
 | `ca_max_array_bytes` | `EPICS_CA_MAX_ARRAY_BYTES` |
 | `log_port`           | `EPICS_IOC_LOG_PORT`       |
 | `log_server`         | `EPICS_IOC_LOG_INET`       |
+| `cas_file`           | `EPICS_CAS_FILE`           |
 
 Environment variables that are not on this list can be set using the `env_vars`
 attribute.
@@ -193,6 +194,12 @@ The default is 7004 (the default port used by iocLogServer).
 
 Allows to configure the `EPICS_IOC_LOG_INET` environment variable for the IOC.
 The default is undefined (environment variable not set).
+
+### `cas_file`
+
+Allows to configure the `EPICS_CAS_FILE` environment variable for the IOC.
+The default is undefined (environment variable not set).
+To be used as input for `asSetFilename(${EPICS_CAS_FILE})`.
 
 ### `logrotate_rotate`
 
