@@ -100,9 +100,9 @@ define epics_softioc::ioc(
   }
 
   if $manage_autosave_dir {
-    $real_env_vars = merge($env_vars6, {'AUTOSAVE_DIR' => "${autosave_base_dir}/softioc-${name}"})
+    $real_env_vars = merge($env_vars7, {'AUTOSAVE_DIR' => "${autosave_base_dir}/softioc-${name}"})
   } else {
-    $real_env_vars = $env_vars6
+    $real_env_vars = $env_vars7
   }
 
   if $uid {
