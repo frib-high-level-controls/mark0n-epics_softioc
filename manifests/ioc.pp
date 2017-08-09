@@ -19,7 +19,7 @@ define epics_softioc::ioc(
   $env_vars            = {},
   $log_port            = 7004,
   $log_server          = undef,
-  $cas_file            = undef,
+  $ca_sec_file         = undef,
   $procServ_logfile    = "/var/log/softioc-${name}/procServ.log",
   $logrotate_rotate    = 30,
   $logrotate_size      = '10M',
@@ -92,9 +92,9 @@ define epics_softioc::ioc(
     $env_vars6 = $env_vars5
   }
 
-  if $cas_file {
-    validate_string($cas_file)
-    $env_vars7 = merge($env_vars6, {'EPICS_CAS_FILE' => $cas_file})
+  if $ca_sec_file {
+    validate_string($ca_sec_file)
+    $env_vars7 = merge($env_vars6, {'EPICS_CA_SEC_FILE' => $ca_sec_file})
   } else {
     $env_vars7 = $env_vars6
   }
