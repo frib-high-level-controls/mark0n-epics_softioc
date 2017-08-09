@@ -19,6 +19,7 @@ define epics_softioc::ioc(
   $env_vars            = {},
   $log_port            = 7004,
   $log_server          = undef,
+  $cas_file            = undef,
   $procServ_logfile    = "/var/log/softioc-${name}/procServ.log",
   $logrotate_rotate    = 30,
   $logrotate_size      = '10M',
@@ -89,6 +90,13 @@ define epics_softioc::ioc(
     $env_vars6 = merge($env_vars5, {'EPICS_IOC_LOG_INET' => $log_server})
   } else {
     $env_vars6 = $env_vars5
+  }
+
+  if $cas_file {
+    validate_string($cas_file)
+    $env_vars7 = merge($env_vars6, {'EPICS_CAS_FILE' => $cas_file})
+  } else {
+    $env_vars7 = $env_vars6
   }
 
   if $manage_autosave_dir {
