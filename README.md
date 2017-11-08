@@ -201,6 +201,10 @@ Allows to configure the `EPICS_CA_SEC_FILE` environment variable for the IOC.
 The default is undefined (environment variable not set).
 To be used as input for `asSetFilename(${EPICS_CA_SEC_FILE})`.
 
+### `logrotate_compress`
+
+Whether to compress the IOC's log files when rotating them. Defaults to `true`.
+
 ### `logrotate_rotate`
 
 The time in days after which a the log file for the procServ log will be
