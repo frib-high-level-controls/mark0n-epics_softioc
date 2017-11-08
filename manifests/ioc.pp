@@ -21,6 +21,7 @@ define epics_softioc::ioc(
   $log_server          = undef,
   $ca_sec_file         = undef,
   $procServ_logfile    = "/var/log/softioc-${name}/procServ.log",
+  $logrotate_compress  = true,
   $logrotate_rotate    = 30,
   $logrotate_size      = '10M',
   $run_make            = true,
@@ -189,6 +190,7 @@ define epics_softioc::ioc(
     missingok    => true,
     ifempty      => false,
     postrotate   => "/bin/systemctl kill --signal=HUP --kill-who=main softioc-${name}.service",
+    compress     => $logrotate_compress,
   }
 
   if $::initsystem == 'systemd' {
