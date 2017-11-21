@@ -114,6 +114,7 @@ define epics_softioc::ioc(
     exec { "build IOC ${name}":
       command   => '/usr/bin/make distclean all',
       cwd       => $abstopdir,
+      umask     => '002',
       unless    => '/usr/bin/make CHECK_RELEASE=NO CHECK_RELEASE_NO= --question',
       require   => Class['epics_softioc::software'],
       subscribe => Package['epics-dev'],
