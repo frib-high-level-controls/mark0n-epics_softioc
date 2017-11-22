@@ -144,12 +144,9 @@ define epics_softioc::ioc(
   if $::initsystem == 'systemd' {
     $absstartscript = "${absbootdir}/${startscript}"
 
-    file { "/etc/systemd/system/softioc-${name}.service":
+    systemd::unit_file { "softioc-${name}.service":
       content => template("${module_name}/etc/systemd/system/ioc.service"),
-      owner   => 'root',
-      group   => 'root',
-      mode    => '0644',
-      notify  => Exec['reload systemd configuration'],
+      notify  => Service["softioc-${name}"],
     }
   } else {
     file { "/etc/iocs/${name}":
@@ -204,7 +201,7 @@ define epics_softioc::ioc(
       require    => [
         Class['epics_softioc::software'],
         Package['procserv'],
-        Exec['reload systemd configuration'],
+        Class['systemd::systemctl::daemon_reload'],
         File["/var/log/softioc-${name}"],
       ],
     }
@@ -217,7 +214,7 @@ define epics_softioc::ioc(
       require    => [
         Class['epics_softioc::software'],
         Package['procserv'],
-        Exec['reload systemd configuration'],
+        Class['systemd::systemctl::daemon_reload'],
         File["/var/log/softioc-${name}"],
       ],
     }
