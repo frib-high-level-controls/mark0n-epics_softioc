@@ -204,6 +204,7 @@ define epics_softioc::ioc(
         Class['epics_softioc::software'],
         Package['procserv'],
         Exec['reload systemd configuration'],
+        File["/var/log/softioc-${name}"],
       ],
     }
   } else {
