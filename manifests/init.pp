@@ -39,11 +39,4 @@ class epics_softioc(
     group  => 'softioc',
     mode   => '2755',
   }
-
-  if $::initsystem == 'systemd' {
-    exec { 'reload systemd configuration':
-      command     => '/bin/systemctl daemon-reload',
-      refreshonly => true,
-    }
-  }
 }
