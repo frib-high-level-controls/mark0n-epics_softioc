@@ -3,8 +3,8 @@
 # directories and configuration files.
 #
 class epics_softioc(
-  $gid = undef,
-  $iocbase = '/usr/local/lib/iocapps',
+  Optional[Integer]  $gid     = undef,
+  String[1, default] $iocbase = '/usr/local/lib/iocapps',
 ) {
   include epics_softioc::software
 

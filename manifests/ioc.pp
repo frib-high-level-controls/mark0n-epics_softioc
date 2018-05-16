@@ -3,51 +3,38 @@
 # registers the service.
 #
 define epics_softioc::ioc(
-  $ensure                      = undef,
-  $enable                      = undef,
-  $manage_autosave_dir         = false,
-  $auto_restart_ioc            = true,
-  $autosave_base_dir           = '/var/lib',
-  $bootdir                     = "iocBoot/ioc\${HOST_ARCH}",
-  $ca_addr_list                = undef,
-  $ca_auto_addr_list           = undef,
-  $ca_max_array_bytes          = undef,
-  $startscript                 = 'st.cmd',
-  $consolePort                 = 4051,
-  $coresize                    = 10000000,
-  $cfg_append                  = [],
-  $env_vars                    = {},
-  $log_port                    = 7004,
-  $log_server                  = undef,
-  $ca_sec_file                 = undef,
-  $procServ_logfile            = "/var/log/softioc-${name}/procServ.log",
-  $logrotate_compress          = true,
-  $logrotate_rotate            = 30,
-  $logrotate_size              = '10M',
-  $run_make                    = true,
-  $uid                         = undef,
-  $abstopdir                   = "${epics_softioc::iocbase}/${name}",
-  $username                    = "softioc-${name}",
-  $manage_user                 = true,
-  $systemd_after               = [ 'network.target' ],
-  $systemd_requires            = [ 'network.target' ],
-  $systemd_requires_mounts_for = [],
+  Optional[Enum['running', 'stopped']]   $ensure                      = undef,
+  Optional[Boolean]                      $enable                      = undef,
+  Boolean                                $manage_autosave_dir         = false,
+  Boolean                                $auto_restart_ioc            = true,
+  String                                 $autosave_base_dir           = '/var/lib',
+  String                                 $bootdir                     = "iocBoot/ioc\${HOST_ARCH}",
+  Optional[String]                       $ca_addr_list                = undef,
+  Optional[Boolean]                      $ca_auto_addr_list           = undef,
+  Optional[Integer]                      $ca_max_array_bytes          = undef,
+  String                                 $startscript                 = 'st.cmd',
+  Integer[1, 65535]                      $consolePort                 = 4051,
+  Integer                                $coresize                    = 10000000,
+  Array[String]                          $cfg_append                  = [],
+  Hash[String, String, default, default] $env_vars                    = {},
+  Integer[1, 65535]                      $log_port                    = 7004,
+  Optional[String]                       $log_server                  = undef,
+  Optional[String]                       $ca_sec_file                 = undef,
+  String                                 $procServ_logfile            = "/var/log/softioc-${name}/procServ.log",
+  Boolean                                $logrotate_compress          = true,
+  Integer                                $logrotate_rotate            = 30,
+  String                                 $logrotate_size              = '10M',
+  Boolean                                $run_make                    = true,
+  Optional[Integer]                      $uid                         = undef,
+  String                                 $abstopdir                   = "${epics_softioc::iocbase}/${name}",
+  String                                 $username                    = "softioc-${name}",
+  Boolean                                $manage_user                 = true,
+  Array[String]                          $systemd_after               = [ 'network.target' ],
+  Array[String]                          $systemd_requires            = [ 'network.target' ],
+  Array[String]                          $systemd_requires_mounts_for = [],
 )
 {
-  if $ensure and !($ensure in ['running', 'stopped']) {
-    fail('ensure parameter must be "running", "stopped" or <undefined>')
-  }
-  if $enable {
-    validate_bool($enable)
-  }
   $iocbase = $epics_softioc::iocbase
-
-  validate_bool($auto_restart_ioc)
-
-  validate_bool($manage_autosave_dir)
-  if($manage_autosave_dir) {
-    validate_absolute_path($autosave_base_dir)
-  }
 
   if($bootdir) {
     $absbootdir = "${abstopdir}/${bootdir}"
@@ -55,17 +42,13 @@ define epics_softioc::ioc(
     $absbootdir = $abstopdir
   }
 
-  validate_hash($env_vars)
-
   if $ca_addr_list {
-    validate_string($ca_addr_list)
     $env_vars2 = merge($env_vars, {'EPICS_CA_ADDR_LIST' => $ca_addr_list})
   } else {
     $env_vars2 = $env_vars
   }
 
   if $ca_auto_addr_list {
-    validate_bool($ca_auto_addr_list)
     $auto_addr_list_str = $ca_auto_addr_list ? {
       true  => 'YES',
       false => 'NO',
@@ -76,28 +59,20 @@ define epics_softioc::ioc(
   }
 
   if $ca_max_array_bytes {
-    validate_integer($ca_max_array_bytes, undef, 16384)
     $env_vars4 = merge($env_vars3, {'EPICS_CA_MAX_ARRAY_BYTES' => $ca_max_array_bytes})
   } else {
     $env_vars4 = $env_vars3
   }
 
-  if $log_port {
-    validate_integer($log_port, 65535, 1)
-    $env_vars5 = merge($env_vars4, {'EPICS_IOC_LOG_PORT' => $log_port})
-  } else {
-    $env_vars5 = $env_vars4
-  }
+  $env_vars5 = merge($env_vars4, {'EPICS_IOC_LOG_PORT' => $log_port})
 
   if $log_server {
-    validate_string($log_server)
     $env_vars6 = merge($env_vars5, {'EPICS_IOC_LOG_INET' => $log_server})
   } else {
     $env_vars6 = $env_vars5
   }
 
   if $ca_sec_file {
-    validate_string($ca_sec_file)
     $env_vars7 = merge($env_vars6, {'EPICS_CA_SEC_FILE' => $ca_sec_file})
   } else {
     $env_vars7 = $env_vars6
@@ -108,14 +83,6 @@ define epics_softioc::ioc(
   } else {
     $real_env_vars = $env_vars7
   }
-
-  if $uid {
-    validate_integer($uid)
-  }
-
-  validate_array($systemd_after)
-  validate_array($systemd_requires)
-  validate_array($systemd_requires_mounts_for)
 
   if $run_make {
     exec { "build IOC ${name}":
