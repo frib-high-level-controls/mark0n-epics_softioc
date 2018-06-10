@@ -9,8 +9,8 @@
   "project_page": "https://stash.nscl.msu.edu/projects/DEPLOY/repos/puppet_module_epics_softioc",
   "issues_url": null,
   "dependencies": [
-    {"name":"yo61-logrotate","version_requirement":">= 1.4.0"}
-    {"name":"jgoettsch-telnet","version_requirement":">= 0.1.0"}
+    {"name":"yo61-logrotate","version_requirement":">= 1.4.0"},
+    {"name":"jgoettsch-telnet","version_requirement":">= 0.1.0"},
     {"name":"camptocamp-systemd","version_requirement":">= 1.1.0"}
   ],
   "data_provider": null
