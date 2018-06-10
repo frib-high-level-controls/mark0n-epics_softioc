@@ -1,10 +1,9 @@
 This Puppet module installs and configures an EPICS soft IOC. The IOC is run in
 `procServ` to ease maintenance. The IOC can be started/stopped as a system
 service.
-On systems that use systemd as init system (e.g. Debian Jessie) a systemd unit
-file will be created for each IOC process. On older systems (e.g. Debian
-Wheezy) this module relies on sysv-rc-softioc for creating System V init
-scripts instead.
+On systems that use systemd as init system (e.g. Debian >=8) a systemd unit
+file will be created for each IOC process. On older systems (e.g. Debian 7) this
+module relies on sysv-rc-softioc for creating System V init scripts instead.
 
 # Environment Variables
 
@@ -35,10 +34,10 @@ attribute.
   }
 
   epics_softioc::ioc { 'mysoftioc':
-    ensure      => running,
-    enable      => true,
-    bootdir     => 'iocBoot/ioclinux-x86_64',
-    require     => File["${iocbase}/mysoftioc"],
+    ensure  => running,
+    enable  => true,
+    bootdir => 'iocBoot/ioclinux-x86_64',
+    require => File["${iocbase}/mysoftioc"],
   }
 ```
 
@@ -280,7 +279,6 @@ are mounted) when this IOC is started. Specify an array of strings. Default:
 `[]`.
 
 This parameter is ignored on systems that are not using `systemd`.
-
 
 ### `uid`
 
