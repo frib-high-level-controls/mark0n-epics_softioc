@@ -1,17 +1,50 @@
 {
   "name": "mark0n-epics_softioc",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "author": "mark0n",
   "summary": "Install EPICS Base and manage EPICS soft-IOCs",
-  "description": "Install EPICS Base and mange EPICS soft-IOCs. This module can automatically build IOCs and run them as a daemon.",
   "license": "MIT",
   "source": "https://github.com/frib-high-level-controls/mark0n-epics_softioc.git",
   "project_page": "https://github.com/frib-high-level-controls/mark0n-epics_softioc",
   "issues_url": "https://github.com/frib-high-level-controls/mark0n-epics_softioc/issues",
   "dependencies": [
-    {"name":"yo61-logrotate","version_requirement":">= 1.4.0"},
-    {"name":"jgoettsch-telnet","version_requirement":">= 0.1.0"},
-    {"name":"camptocamp-systemd","version_requirement":">= 1.1.0"}
+    {
+      "name": "puppet-logrotate",
+      "version_requirement": ">= 1.4.0 < 2.0.0"
+    },
+    {
+      "name": "jgoettsch-telnet",
+      "version_requirement": ">= 0.1.0 < 1.0.0"
+    },
+    {
+      "name": "camptocamp-systemd",
+      "version_requirement": ">= 1.1.0 < 3.0.0"
+    }
   ],
-  "data_provider": null
+  "operatingsystem_support": [
+    {
+      "operatingsystem": "Debian",
+      "operatingsystemrelease": [
+        "8",
+        "9"
+      ]
+    },
+    {
+      "operatingsystem": "Ubuntu",
+      "operatingsystemrelease": [
+        "16.04",
+        "18.04"
+      ]
+    }
+  ],
+  "requirements": [
+    {
+      "name": "puppet",
+      "version_requirement": ">= 4.10.0 < 6.0.0"
+    }
+  ],
+  "description": "Install EPICS Base and mange EPICS soft-IOCs. This module can automatically build IOCs and run them as a daemon.",
+  "pdk-version": "1.7.0",
+  "template-url": "file:///opt/puppetlabs/pdk/share/cache/pdk-templates.git",
+  "template-ref": "1.7.0-0-g57412ed"
 }
