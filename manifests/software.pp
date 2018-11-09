@@ -3,16 +3,16 @@
 #
 class epics_softioc::software() {
   package { 'build-essential':
-    ensure => hiera('epics_softioc::software::ensure_build-essential', 'latest'),
+    ensure => lookup('epics_softioc::software::ensure_build-essential', String, 'first', 'latest'),
   }
 
   package { 'epics-dev':
-    ensure => hiera('epics_softioc::software::ensure_epics-dev', 'latest'),
+    ensure => lookup('epics_softioc::software::ensure_epics-dev', String, 'first', 'latest'),
   }
 
   include 'telnet'
 
   package { 'procserv':
-    ensure => hiera('epics_softioc::software::ensure_procserv', 'latest'),
+    ensure => lookup('epics_softioc::software::ensure_procserv', String, 'first', 'latest'),
   }
 }
