@@ -64,7 +64,7 @@ epics_softioc::ioc { 'vacuum':
   ensure            => running,
   enable            => true,
   bootdir           => 'iocBoot/ioclinux-x86_64',
-  consolePort       => 4051,
+  console_port      => 4051,
   ca_addr_list      => '',
   ca_auto_addr_list => true,
   env_vars          => {
@@ -77,12 +77,12 @@ epics_softioc::ioc { 'vacuum':
 }
 
 epics_softioc::ioc { 'llrf':
-  ensure      => running,
-  enable      => true,
-  bootdir     => 'iocBoot/ioclinux-x86_64',
-  consolePort => 4052,
-  uid         => 901,
-  require     => File["${iocbase}/llrf"],
+  ensure       => running,
+  enable       => true,
+  bootdir      => 'iocBoot/ioclinux-x86_64',
+  console_port => 4052,
+  uid          => 901,
+  require      => File["${iocbase}/llrf"],
 }
 ```
 
@@ -156,7 +156,7 @@ IOC. The default is undefined (environment variable not set).
 Allows to set additional variables in the IOC's config file in `/etc/iocs/`.
 This is not used on machines that use systemd.
 
-### `consolePort`
+### `console_port`
 
 Specify the port number `procServ` will listen on for connections to the IOC
 shell. You can connect to the IOC shell using `telnet localhost <portnumber>`.
@@ -228,7 +228,7 @@ Whether to create the user account the IOC is running as. Set to false to use a
 user account that is managed by Puppet code outside of this module. Disable if
 you want multiple IOCs to share the same user account. Defaults to `true`.
 
-### `procServ_logfile`
+### `procserv_log_file`
 
 The log file that `procServ` uses to log activity on the IOC shell. Default:
 `/var/log/softioc-<ioc_name>/procServ.log`.

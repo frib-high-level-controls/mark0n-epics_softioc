@@ -1,5 +1,5 @@
 NAME=<%= @name %>
-PORT=<%= @consolePort %>
+PORT=<%= @console_port %>
 HOST=<%= @fqdn %>
 USER=<%= @username %>
 CORESIZE=<%= @coresize %>

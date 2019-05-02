@@ -13,14 +13,14 @@ define epics_softioc::ioc(
   Optional[Boolean]                      $ca_auto_addr_list           = undef,
   Optional[Integer]                      $ca_max_array_bytes          = undef,
   String                                 $startscript                 = 'st.cmd',
-  Integer[1, 65535]                      $consolePort                 = 4051,
+  Integer[1, 65535]                      $console_port                = 4051,
   Integer                                $coresize                    = 10000000,
   Array[String]                          $cfg_append                  = [],
   Hash[String, String, default, default] $env_vars                    = {},
   Integer[1, 65535]                      $log_port                    = 7004,
   Optional[String]                       $log_server                  = undef,
   Optional[String]                       $ca_sec_file                 = undef,
-  String                                 $procServ_logfile            = "/var/log/softioc-${name}/procServ.log",
+  String                                 $procserv_log_file           = "/var/log/softioc-${name}/procServ.log",
   Boolean                                $logrotate_compress          = true,
   Integer                                $logrotate_rotate            = 30,
   String                                 $logrotate_size              = '10M',
@@ -155,7 +155,7 @@ define epics_softioc::ioc(
   }
 
   logrotate::rule { "softioc-${name}":
-    path         => $procServ_logfile,
+    path         => $procserv_log_file,
     rotate_every => 'day',
     rotate       => $logrotate_rotate,
     size         => $logrotate_size,
