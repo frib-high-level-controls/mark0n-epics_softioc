@@ -26,21 +26,24 @@
       "operatingsystem": "Debian",
       "operatingsystemrelease": [
         "8",
-        "9"
+        "9",
+        "10"
       ]
     },
     {
       "operatingsystem": "Ubuntu",
       "operatingsystemrelease": [
         "16.04",
-        "18.04"
+        "18.04",
+        "18.10",
+        "19.04"
       ]
     }
   ],
   "requirements": [
     {
       "name": "puppet",
-      "version_requirement": ">= 4.10.0 < 6.0.0"
+      "version_requirement": ">= 5.5.0 < 7.0.0"
     }
   ],
   "description": "Install EPICS Base and mange EPICS soft-IOCs. This module can automatically build IOCs and run them as a daemon.",
