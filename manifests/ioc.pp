@@ -25,6 +25,7 @@ define epics_softioc::ioc(
   Integer                                $logrotate_rotate            = 30,
   String                                 $logrotate_size              = '10M',
   Boolean                                $run_make                    = true,
+  Boolean                                $run_make_after_pkg_update   = true,
   Optional[Integer]                      $uid                         = undef,
   String                                 $abstopdir                   = "${epics_softioc::iocbase}/${name}",
   String                                 $username                    = "softioc-${name}",
@@ -192,6 +193,10 @@ define epics_softioc::ioc(
         File["/var/log/softioc-${name}"],
       ],
     }
+  }
+
+  if $run_make and $run_make_after_pkg_update {
+    Package <| tag == 'epics_ioc_pkg' |> ~> Exec["build IOC ${name}"]
   }
 
   if $run_make and $auto_restart_ioc {

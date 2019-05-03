@@ -247,6 +247,43 @@ Depending on the `auto_restart_ioc` setting this might also cause the IOC to
 restart on every Puppet run! Please verify that your Makefiles are behaving
 correctly to prevent surprises.
 
+### `run_make_after_pkg_update`
+
+If this option is activated the IOC will be recompiled whenever a `package`
+resource tagged as `epics_ioc_pkg` is refreshed. This can be used to rebuild
+IOCs when facility-wide installed EPICS modules like autosave are being
+updated. The default is `true`.
+
+#### Example
+
+Facility-wide IOC profile:
+```
+  class { 'epics_softioc':
+    iocbase => '/usr/local/lib/iocapps',
+  }
+
+  package { 'epics-autosave-dev':
+    ensure => latest,
+    tag    => 'epics_ioc_pkg',
+  }
+```
+
+Machine-specific manifest:
+```
+  epics_softioc::ioc { 'mysoftioc1':
+    ...
+  }
+
+  epics_softioc::ioc { 'mysoftioc2':
+    ...
+    run_make_after_pkg_update => false,
+  }
+```
+
+In this example `mysoftioc1` will automatically be recompiled (and restarted
+if `auto_restart_ioc` is `true`) when Puppet installs a new version of the
+`epics-autosave-dev` package.
+
 ### `startscript`
 
 Base file name of the IOC start script. This defaults to `st.cmd`.
