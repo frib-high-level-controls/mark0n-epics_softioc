@@ -10,8 +10,6 @@ class epics_softioc::software() {
     ensure => lookup('epics_softioc::software::ensure_epics-dev', String, 'first', 'latest'),
   }
 
-  include 'telnet'
-
   package { 'procserv':
     ensure => lookup('epics_softioc::software::ensure_procserv', String, 'first', 'latest'),
   }
