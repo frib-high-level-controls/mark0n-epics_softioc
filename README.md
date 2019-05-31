@@ -162,10 +162,24 @@ Specify the port number `procServ` will listen on for connections to the IOC
 shell. You can connect to the IOC shell using `telnet localhost <portnumber>`.
 The default port is `4051`.
 
+Note that access is not possible if `enable_console_port` is set to `false`.
+
 ### `coresize`
 
 The maximum size (in Bytes) of a core file that will be written in case the IOC
 crashes. The default is `10000000`.
+
+### `enable_console_port`
+
+If set to `true` (the default) `procServ` will listen on the port specified by
+`console_port` for connections to the IOC shell. If this flag is `true` for at
+least one IOC `telnet` is being installed.
+
+### `enable_unix_domain_socket`
+
+If set to `true` (the default) `procServ` will create a unix domain socket for
+connections to the IOC shell. If this flag is `true` for at least one IOC the
+BSD version of `netcat` is installed.
 
 ### `ensure`
 
@@ -253,6 +267,15 @@ If this option is activated the IOC will be recompiled whenever a `package`
 resource tagged as `epics_ioc_pkg` is refreshed. This can be used to rebuild
 IOCs when facility-wide installed EPICS modules like autosave are being
 updated. The default is `true`.
+
+### `unix_domain_socket`
+
+Specify the unix domain socket file `procServ` will create for connections to
+the IOC shell. You can connect to the IOC shell using
+`nc -U <unix_domain_socket>`. The default is `/run/softioc/<ioc_name>.sock`.
+
+Note that the unix domain socket will not be created if
+`enable_unix_domain_socket` is set to `false`.
 
 #### Example
 

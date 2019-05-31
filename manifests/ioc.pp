@@ -13,7 +13,10 @@ define epics_softioc::ioc(
   Optional[Boolean]                      $ca_auto_addr_list           = undef,
   Optional[Integer]                      $ca_max_array_bytes          = undef,
   String                                 $startscript                 = 'st.cmd',
+  Boolean                                $enable_console_port         = true,
   Integer[1, 65535]                      $console_port                = 4051,
+  Boolean                                $enable_unix_domain_socket   = true,
+  String                                 $unix_domain_socket          = "unix:/run/softioc/${name}.sock",
   Integer                                $coresize                    = 10000000,
   Array[String]                          $cfg_append                  = [],
   Hash[String, String, default, default] $env_vars                    = {},
@@ -83,6 +86,14 @@ define epics_softioc::ioc(
     $real_env_vars = merge($env_vars7, {'AUTOSAVE_DIR' => "${autosave_base_dir}/softioc-${name}"})
   } else {
     $real_env_vars = $env_vars7
+  }
+
+  if $enable_console_port {
+    include epics_softioc::telnet
+  }
+
+  if $enable_unix_domain_socket {
+    include epics_softioc::unix_domain_socket
   }
 
   if $run_make {
