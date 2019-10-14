@@ -16,7 +16,7 @@ define epics_softioc::ioc(
   Boolean                                $enable_console_port         = true,
   Integer[1, 65535]                      $console_port                = 4051,
   Boolean                                $enable_unix_domain_socket   = true,
-  String                                 $unix_domain_socket          = "unix:/run/softioc/${name}.sock",
+  String                                 $unix_domain_socket          = "softioc-${name}/procServ.sock",
   Integer                                $coresize                    = 10000000,
   Array[String]                          $cfg_append                  = [],
   Hash[String, String, default, default] $env_vars                    = {},
