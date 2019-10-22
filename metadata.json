@@ -1,6 +1,6 @@
 {
   "name": "mark0n-epics_softioc",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "author": "mark0n",
   "summary": "Install EPICS Base and manage EPICS soft-IOCs",
   "license": "MIT",
@@ -36,7 +36,8 @@
         "16.04",
         "18.04",
         "18.10",
-        "19.04"
+        "19.04",
+        "19.10"
       ]
     }
   ],
