@@ -270,9 +270,10 @@ updated. The default is `true`.
 
 ### `unix_domain_socket`
 
-Specify the unix domain socket file `procServ` will create for connections to
-the IOC shell. You can connect to the IOC shell using
-`nc -U <unix_domain_socket>`. The default is `/run/softioc/<ioc_name>.sock`.
+Specify the Unix domain socket file `procServ` will create for connections to
+the IOC shell. The file name has to be specified relative to the run-time
+directory (`/run`). You can connect to the IOC shell using
+`nc -U <unix_domain_socket>`. The default is `softioc-<ioc_name>/procServ.sock`.
 
 Note that the unix domain socket will not be created if
 `enable_unix_domain_socket` is set to `false`.
